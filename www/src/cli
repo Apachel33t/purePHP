@@ -1,0 +1,28 @@
+#!/usr/bin/env php
+<?php
+
+require_once __DIR__ . "/Autoloader.php";
+
+$autoloader = new Autoloader();
+
+$autoloader->register();
+
+if (php_sapi_name() !== 'cli') {
+    exit;
+}
+
+use Services\Console\ConsoleHandler;
+use App\Console\StorageConsole;
+
+$cli = new ConsoleHandler();
+
+$cli->addCommand('set', [StorageConsole::class, 'set']);
+$cli->addCommand('get', [StorageConsole::class, 'get']);
+$cli->addCommand('update', [StorageConsole::class, 'update']);
+$cli->addCommand('remove', [StorageConsole::class, 'remove']);
+
+$cli->addCommand('help', function() use ($cli) {
+    $cli->printer("Here u'r help.");
+});
+
+$cli->runCommand($argv);
